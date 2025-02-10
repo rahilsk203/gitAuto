@@ -83,7 +83,7 @@ def create_repo(repo_name, private=True):
 def auto_clone(repo_name):
     """Automatically clone, enter the repo, and exit script."""
     credentials = git_login()
-    repo_url = f"https://github.com/{credentials['username']}/{repo_name}.git"
+    repo_url = f"https://{credentials['username']}:{credentials['token']}@github.com/{credentials['username']}/{repo_name}.git"
 
     print(f"📥 Cloning {repo_name}...")
     execute_command(["git", "clone", repo_url])
@@ -128,14 +128,21 @@ def set_repo_visibility(repo_name, private):
         print(f"❌ Error: {response.json()}")
 
 def push_repo():
-    """Push latest changes to GitHub."""
+    """Push latest changes to GitHub with stored authentication."""
     if not os.path.exists(".git"):
         print("❌ This is not a Git repository!")
         return
 
+    credentials = load_credentials()
+    if not credentials:
+        print("❌ No GitHub credentials found! Please login first.")
+        return
+
+    repo_url = f"https://{credentials['username']}:{credentials['token']}@github.com/{credentials['username']}/{os.path.basename(os.getcwd())}.git"
+
     execute_command(["git", "add", "."])
     execute_command(["git", "commit", "-m", "Auto commit"])
-    execute_command(["git", "push"])
+    execute_command(["git", "push", repo_url])
 
 def clone_public_repo():
     """Clone any public GitHub repository and enter the folder."""
