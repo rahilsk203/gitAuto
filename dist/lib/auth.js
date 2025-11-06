@@ -2,9 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const inquirer = require('inquirer');
-const open = require('open');
-const http = require('http');
-const url = require('url');
+const ghCli = require('./gh-cli');
 
 const CREDENTIALS_FILE = path.join(os.homedir(), '.git_credentials.json');
 
@@ -41,75 +39,6 @@ function saveCredentials(username, token) {
 }
 
 /**
- * Start a local server to receive the OAuth callback
- * @returns {Promise<string>} The access token
- */
-function startOAuthServer() {
-  return new Promise((resolve, reject) => {
-    const server = http.createServer((req, res) => {
-      const queryObject = url.parse(req.url, true).query;
-      
-      if (queryObject.code) {
-        // In a real implementation, we would exchange the code for an access token
-        // For this demo, we'll just close the server and return a mock token
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end(`
-          <html>
-            <body>
-              <h1>Authentication Successful!</h1>
-              <p>You can close this window and return to the terminal.</p>
-              <script>
-                window.close();
-              </script>
-            </body>
-          </html>
-        `);
-        
-        // Close server and resolve with a mock token
-        server.close();
-        resolve('gho_' + Math.random().toString(36).substring(2, 15));
-      } else {
-        res.writeHead(400, { 'Content-Type': 'text/html' });
-        res.end('<h1>Authentication Failed</h1><p>Invalid callback.</p>');
-        server.close();
-        reject(new Error('Authentication failed'));
-      }
-    });
-    
-    server.listen(3000, () => {
-      console.log('OAuth server listening on port 3000');
-    });
-  });
-}
-
-/**
- * Login using GitHub OAuth flow
- */
-async function oauthLogin() {
-  const clientId = 'YOUR_GITHUB_OAUTH_APP_CLIENT_ID'; // This would be your actual OAuth app client ID
-  const redirectUri = 'http://localhost:3000/callback';
-  const scope = 'repo user';
-  
-  const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
-  
-  console.log('Opening browser for GitHub authentication...');
-  console.log('If the browser does not open automatically, please visit this URL:');
-  console.log(authUrl);
-  
-  // Open the browser
-  await open(authUrl);
-  
-  try {
-    // Start the OAuth server and wait for the callback
-    const token = await startOAuthServer();
-    return token;
-  } catch (error) {
-    console.error('❌ OAuth login failed:', error.message);
-    return null;
-  }
-}
-
-/**
  * Login using GitHub username & token
  */
 async function manualLogin() {
@@ -132,7 +61,22 @@ async function manualLogin() {
 }
 
 /**
- * Login using GitHub username & token or OAuth
+ * Login using GitHub CLI
+ */
+async function ghCliLogin() {
+  console.log('🔐 Logging in with GitHub CLI...');
+  const result = await ghCli.loginWithGhCli();
+  
+  if (result.username && result.token) {
+    return result;
+  }
+  
+  console.log('❌ GitHub CLI login failed. Falling back to manual token entry...');
+  return await manualLogin();
+}
+
+/**
+ * Login using GitHub username & token or GitHub CLI
  */
 async function login() {
   const credentials = loadCredentials();
@@ -141,43 +85,48 @@ async function login() {
     return credentials;
   }
 
+  console.log('\n🔐 GitHub Authentication');
+  console.log('=====================');
+  
+  // Check if GitHub CLI is available
+  const ghInstalled = ghCli.isGhInstalled();
+  const ghAuthStatus = ghInstalled ? ghCli.getGhAuthStatus() : { authenticated: false };
+  
+  const choices = [
+    { name: 'Manual Token Entry', value: 'manual' }
+  ];
+  
+  if (ghInstalled) {
+    if (ghAuthStatus.authenticated) {
+      choices.unshift({ name: `GitHub CLI (already logged in as ${ghAuthStatus.username})`, value: 'gh-cli' });
+    } else {
+      choices.unshift({ name: 'GitHub CLI', value: 'gh-cli' });
+    }
+  }
+  
   const answers = await inquirer.prompt([
     {
       type: 'list',
       name: 'loginMethod',
       message: 'How would you like to login?',
-      choices: [
-        { name: 'Browser Login (OAuth)', value: 'oauth' },
-        { name: 'Manual Token Entry', value: 'manual' }
-      ]
+      choices
     }
   ]);
 
   let username, token;
   
-  if (answers.loginMethod === 'oauth') {
-    token = await oauthLogin();
-    if (token) {
-      // In a real implementation, we would get the username from the GitHub API
-      const usernameAnswer = await inquirer.prompt([
-        {
-          type: 'input',
-          name: 'username',
-          message: 'Enter your GitHub username:',
-          validate: input => input.length > 0 || 'Username cannot be empty'
-        }
-      ]);
-      username = usernameAnswer.username;
-    } else {
-      console.log('❌ OAuth login failed. Falling back to manual entry.');
+  switch (answers.loginMethod) {
+    case 'gh-cli':
+      const ghResult = await ghCliLogin();
+      username = ghResult.username;
+      token = ghResult.token;
+      break;
+    case 'manual':
+    default:
       const manualCreds = await manualLogin();
       username = manualCreds.username;
       token = manualCreds.token;
-    }
-  } else {
-    const manualCreds = await manualLogin();
-    username = manualCreds.username;
-    token = manualCreds.token;
+      break;
   }
 
   if (username && token) {

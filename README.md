@@ -16,7 +16,8 @@ gitAuto is a Node.js-based automation tool designed to simplify common GitHub re
 - Delete repositories (local and remote)
 - Change repository visibility (private/public)
 - Cross-platform compatibility (Windows, macOS, Linux)
-- Browser-based OAuth authentication
+- GitHub CLI integration with browser authentication
+- Manual token authentication
 - Automatic Git configuration (user name and email)
 - Build script for packaging
 
@@ -31,7 +32,7 @@ gitAuto is a Node.js-based automation tool designed to simplify common GitHub re
 You can install gitAuto globally using npm:
 
 ```bash
-npm install -g gitauto
+npm install -g @rahilsk/gitauto
 ```
 
 Or clone the repository and install locally:
@@ -52,23 +53,34 @@ gitauto
 
 On first run, the tool will:
 1. Automatically configure your Git user settings (name and email)
-2. Prompt you to login via browser OAuth or manual token entry
+2. Prompt you to login via one of the available authentication methods
 
 ### GitHub Authentication
 
-gitAuto supports two authentication methods:
+gitAuto supports multiple authentication methods:
 
-1. **Browser Login (OAuth)**: 
-   - Automatically opens your browser for GitHub authentication
-   - No need to manually create tokens
-   - Secure and convenient
+1. **GitHub CLI Integration** (Recommended):
+   - Uses your existing GitHub CLI authentication
+   - No need to manage separate tokens
+   - Supports browser-based authentication for easy login
+   - Automatically detected if GitHub CLI is installed and authenticated
+   - To set up:
+     1. Install GitHub CLI: https://cli.github.com/
+     2. Run `gh auth login` to authenticate
+     3. gitAuto will automatically use your GitHub CLI credentials
 
 2. **Manual Token Entry**:
    - Requires a GitHub Personal Access Token
    - To generate a token:
-     1. Go to GitHub Settings → Developer settings → Personal access tokens
+     1. Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
      2. Generate a new token with `repo` permissions
      3. Copy the token and use it when prompted by gitAuto
+
+### GitHub CLI Browser Authentication
+
+When using GitHub CLI authentication, gitAuto offers two login methods:
+1. **Browser Authentication**: Opens your default browser for GitHub authentication (recommended)
+2. **Interactive Terminal Login**: Traditional terminal-based authentication flow
 
 ### Automatic Git Configuration
 
