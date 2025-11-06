@@ -1,91 +1,98 @@
+# gitAuto
 
-# gitAuto 🛠️
+A Node.js CLI tool for automating common GitHub repository management tasks.
 
-Welcome to the **gitAuto** project! This Python-based script simplifies your GitHub operations by automating repository management tasks such as creating, deleting, cloning, and pushing to GitHub repositories. It also provides an easy way to manage branches and repository visibility (private/public).
+## Overview
 
-## Features 🎉
+gitAuto is a Node.js-based automation tool designed to simplify common GitHub repository management tasks. It enables developers to interact with GitHub repositories directly from the terminal without manually navigating through the web interface.
 
-- **Create New Repository**: Create a new GitHub repository directly from your terminal.
-- **Clone Public Repository**: Clone any public Git repository with ease.
-- **Push Changes**: Push local changes to your GitHub repository.
-- **Delete Repository**: Delete a repository both locally and from GitHub.
-- **Manage Branches**: Create, switch, and list branches easily.
-- **Make Repository Private/Public**: Change the visibility of your GitHub repositories.
+## Features
 
-## Installation 🔧
+- Create new GitHub repository
+- Clone public repositories
+- Push local changes to remote
+- Pull updates from remote
+- Manage branches (create, switch, list)
+- Delete repositories (local and remote)
+- Change repository visibility (private/public)
+- Cross-platform compatibility (Windows, macOS, Linux)
 
-### Prerequisites 🛠️
+## Prerequisites
 
-Before you begin, ensure that you have Python and Git installed on your machine. If not, the setup script will handle the installation for you.
+- Node.js (version 12 or higher)
+- Git
+- GitHub account with Personal Access Token
 
-### Windows Setup Script 📝
+## Installation
 
-1. Download or clone this repository:
-   ```bash
-   git clone https://github.com/rahilsk203/gitAuto.git
+You can install gitAuto globally using npm:
 
-2. Run the install.bat script to automatically install Python, Git, and set up the gitAuto environment. The script will:
+```bash
+npm install -g gitauto
+```
 
-Check and install Python & Git if not already installed.
+Or clone the repository and install locally:
 
-Create a gitAuto directory and place the gitauto.py script inside.
-
-Add the directory to your system PATH for easy access.
-
-
-
-3. After the installation, you can run the gitauto.py script or use the gitauto.bat file to run the tool globally from anywhere in your terminal.
-
-
-
-Linux/MacOS Setup (Manual) 🖥️
-
-1. Clone the repository:
-
+```bash
 git clone https://github.com/rahilsk203/gitAuto.git
+cd gitAuto
+npm install -g .
+```
 
+## Usage
 
-2. Install dependencies:
+After installation, you can use the `gitauto` command from anywhere in your terminal:
 
-pip install requests
+```bash
+gitauto
+```
 
+On first run, you'll be prompted to enter your GitHub username and Personal Access Token (PAT).
 
-3. Run the gitauto.py script directly:
+### GitHub Personal Access Token
 
-python gitAuto/gitauto.py
+To use gitAuto, you need a GitHub Personal Access Token with appropriate permissions:
 
+1. Go to GitHub Settings → Developer settings → Personal access tokens
+2. Generate a new token with `repo` permissions
+3. Copy the token and use it when prompted by gitAuto
 
+## Available Commands
 
-Usage 🚀
+When running `gitauto`, you'll be presented with a menu of options:
 
-After installation, you can run the following commands in your terminal:
+### Outside a Git Repository
 
-gitauto - Opens the main menu to manage your Git repositories.
+- **Create Repository**: Create a new GitHub repository and clone it locally
+- **Clone Public Repository**: Clone any public GitHub repository
 
-Choose actions from the menu:
+### Inside a Git Repository
 
-Create a new repository
+- **Push to Repository**: Add, commit, and push changes to the remote repository
+- **Pull Latest Changes**: Pull the latest changes from the remote repository
+- **Branch Management**: Create, list, and switch branches
+- **Show Status**: Display the current git status
+- **Show Commit History**: Display the commit history
 
-Clone public repository
+### General
 
-Push changes
+- **Delete Repository**: Delete a repository from GitHub and locally
+- **Make Repository Private/Public**: Change repository visibility
+- **Exit**: Exit the application
 
-Pull updates
+## Development
 
-Manage branches
+To contribute to gitAuto:
 
-Delete a repository
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Run the application: `node index.js` or `npm start`
+4. Create a pull request with your changes
 
-Make repository private/public
+## License
 
+This project is licensed under the MIT License - see the LICENSE file for details.
 
+## Author
 
-Repository URL 🌐
-
-You can view or contribute to this project here:
-
-gitAuto GitHub Repository
-
-
-Feel free to modify or enhance it further according to your needs!
-
+SKRahil
