@@ -16,10 +16,9 @@ gitAuto is a Node.js-based automation tool designed to simplify common GitHub re
 - Delete repositories (local and remote)
 - Change repository visibility (private/public)
 - Cross-platform compatibility (Windows, macOS, Linux)
-- GitHub CLI integration (use existing gh auth)
-- Manual token authentication
+- Automatic GitHub CLI installation
+- Simple GitHub CLI authentication
 - Automatic Git configuration (user name and email)
-- Build script for packaging
 
 ## Prerequisites
 
@@ -29,18 +28,10 @@ gitAuto is a Node.js-based automation tool designed to simplify common GitHub re
 
 ## Installation
 
-You can install gitAuto globally using npm:
+Install gitAuto globally using npm:
 
 ```bash
 npm install -g @rahilsk/gitauto
-```
-
-Or clone the repository and install locally:
-
-```bash
-git clone https://github.com/rahilsk203/gitAuto.git
-cd gitAuto
-npm install -g .
 ```
 
 ## Usage
@@ -52,34 +43,29 @@ gitauto
 ```
 
 On first run, the tool will:
-1. Automatically configure your Git user settings (name and email)
-2. Prompt you to login via one of the available authentication methods
+1. Automatically check for and install required tools (Node.js, Git, GitHub CLI)
+2. Automatically configure your Git user settings (name and email)
+3. Run `gh auth login` for authentication
 
-### GitHub Authentication
+### Automatic Tool Installation
 
-gitAuto supports multiple authentication methods:
+gitAuto automatically checks for and installs missing tools:
+- Detects your operating system
+- Installs GitHub CLI using the appropriate package manager
+- Supports Windows (winget, Chocolatey), macOS (Homebrew), and Linux (APT, YUM)
 
-1. **GitHub CLI Integration** (Recommended):
-   - Uses your existing GitHub CLI authentication
-   - No need to manage separate tokens
-   - Automatically detected if GitHub CLI is installed and authenticated
-   - To set up:
-     1. Install GitHub CLI: https://cli.github.com/
-     2. Run `gh auth login` to authenticate
-     3. gitAuto will automatically use your GitHub CLI credentials
+### Authentication
 
-2. **Manual Token Entry**:
-   - Requires a GitHub Personal Access Token
-   - To generate a token:
-     1. Go to GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)
-     2. Generate a new token with `repo` permissions
-     3. Copy the token and use it when prompted by gitAuto
+gitAuto uses the GitHub CLI for authentication:
+- Runs `gh auth login` command directly
+- Uses existing GitHub CLI authentication if already logged in
+- No complex authentication flows or manual token management
 
 ### Automatic Git Configuration
 
-gitAuto automatically configures your Git user settings if they're not already set:
-- User name: Defaults to your system username
-- User email: Defaults to your system username@users.noreply.github.com
+gitAuto automatically configures your Git user settings:
+- User name: Set to your system username
+- User email: Set to your_system_username@users.noreply.github.com
 
 ## Available Commands
 
@@ -109,20 +95,8 @@ When running `gitauto`, you'll be presented with a menu of options:
 To contribute to gitAuto:
 
 1. Clone the repository
-2. Install dependencies: `npm install`
-3. Run the application: `node index.js` or `npm start`
-4. Build the application: `npm run build`
-5. Create a pull request with your changes
-
-## Build Process
-
-gitAuto includes a build script that packages the application:
-
-```bash
-npm run build
-```
-
-This creates a `dist` directory with all necessary files for distribution.
+2. Run the application: `node index.js` or `npm start`
+3. Create a pull request with your changes
 
 ## License
 
