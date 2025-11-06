@@ -283,25 +283,47 @@ async function showStatusAdvanced() {
     const commitResult = await executeCommandAdvanced('git rev-parse HEAD');
     const changesResult = await executeCommandAdvanced('git status --porcelain');
     
+    // Extract branch name (handle both success and failure cases)
+    let branchName = 'unknown';
+    if (branchResult.success && branchResult.stdout) {
+      branchName = branchResult.stdout.trim();
+    } else if (!branchResult.success) {
+      // Fallback to parsing from git status
+      const fullStatusResult = await executeCommandAdvanced('git status');
+      if (fullStatusResult.success && fullStatusResult.stdout) {
+        const match = fullStatusResult.stdout.match(/On branch (\S+)/);
+        if (match) {
+          branchName = match[1];
+        }
+      }
+    }
+    
+    // Extract commit hash (handle both success and failure cases)
+    let commitHash = 'unknown';
+    if (commitResult.success && commitResult.stdout) {
+      commitHash = commitResult.stdout.trim().substring(0, 7);
+    }
+    
     console.log('📊 Repository Status:');
     console.log('====================');
-    console.log(`Current branch: ${branchResult.stdout || 'unknown'}`);
-    console.log(`Latest commit: ${commitResult.stdout ? commitResult.stdout.substring(0, 7) : 'unknown'}`);
+    console.log(`Current branch: ${branchName}`);
+    console.log(`Latest commit: ${commitHash}`);
     
+    // Count uncommitted changes
+    let uncommittedCount = 0;
     if (changesResult.success && changesResult.stdout) {
       const changes = changesResult.stdout.split('\n').filter(line => line.trim() !== '');
-      console.log(`Uncommitted changes: ${changes.length}`);
-    } else {
-      console.log('Uncommitted changes: 0');
+      uncommittedCount = changes.length;
     }
+    console.log(`Uncommitted changes: ${uncommittedCount}`);
     
     console.log('\n📝 Detailed status:');
     console.log(statusResult.stdout);
     
     return { 
       success: true, 
-      branch: branchResult.stdout,
-      commit: commitResult.stdout,
+      branch: branchName,
+      commit: commitHash,
       status: statusResult.stdout
     };
   } catch (error) {
