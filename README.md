@@ -1,4 +1,4 @@
-# gitAuto 
+# gitAuto
 
 A Node.js CLI tool for automating common GitHub repository management tasks.
 
