@@ -117,13 +117,6 @@ function autoConfigureGit() {
 function checkAndInstallRequirements() {
   console.log('🔍 Checking for required tools...');
   
-  // Check Node.js
-  if (!commandExists('node')) {
-    console.error('❌ Node.js is not installed. Please install Node.js from https://nodejs.org/');
-    return false;
-  }
-  console.log('✅ Node.js is installed');
-  
   // Check Git
   if (!commandExists('git')) {
     console.error('❌ Git is not installed. Please install Git from https://git-scm.com/');

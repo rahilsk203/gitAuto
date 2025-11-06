@@ -273,58 +273,70 @@ async function showStatusAdvanced() {
     }
     
     // Get basic status
-    const statusResult = await executeCommandAdvanced('git status');
-    if (!statusResult.success) {
-      throw new Error(statusResult.stderr || 'Failed to get status');
-    }
+    const statusResult = await executeCommandAdvanced('git status', { captureOutput: true });
     
     // Get detailed information
-    const branchResult = await executeCommandAdvanced('git branch --show-current');
-    const commitResult = await executeCommandAdvanced('git rev-parse HEAD');
-    const changesResult = await executeCommandAdvanced('git status --porcelain');
+    const branchResult = await executeCommandAdvanced('git branch --show-current', { captureOutput: true });
+    const commitResult = await executeCommandAdvanced('git rev-parse HEAD', { captureOutput: true });
+    const changesResult = await executeCommandAdvanced('git status --porcelain', { captureOutput: true });
     
-    // Extract branch name (handle both success and failure cases)
+    // Extract branch name with comprehensive error handling
     let branchName = 'unknown';
-    if (branchResult.success && branchResult.stdout) {
-      branchName = branchResult.stdout.trim();
-    } else if (!branchResult.success) {
-      // Fallback to parsing from git status
-      const fullStatusResult = await executeCommandAdvanced('git status');
-      if (fullStatusResult.success && fullStatusResult.stdout) {
-        const match = fullStatusResult.stdout.match(/On branch (\S+)/);
-        if (match) {
-          branchName = match[1];
+    if (branchResult && branchResult.success) {
+      if (typeof branchResult.stdout === 'string') {
+        branchName = branchResult.stdout.trim() || 'unknown';
+      } else if (branchResult.stdout) {
+        branchName = String(branchResult.stdout).trim() || 'unknown';
+      }
+    }
+    
+    // If branch is still unknown, try fallback method
+    if (branchName === 'unknown' || branchName === '') {
+      if (statusResult && statusResult.success && statusResult.stdout) {
+        const fullStatus = typeof statusResult.stdout === 'string' ? statusResult.stdout : String(statusResult.stdout);
+        const branchMatch = fullStatus.match(/On branch (\S+)/);
+        if (branchMatch && branchMatch[1]) {
+          branchName = branchMatch[1];
         }
       }
     }
     
-    // Extract commit hash (handle both success and failure cases)
+    // Extract commit hash with comprehensive error handling
     let commitHash = 'unknown';
-    if (commitResult.success && commitResult.stdout) {
-      commitHash = commitResult.stdout.trim().substring(0, 7);
+    if (commitResult && commitResult.success) {
+      if (typeof commitResult.stdout === 'string') {
+        commitHash = commitResult.stdout.trim() ? commitResult.stdout.trim().substring(0, 7) : 'unknown';
+      } else if (commitResult.stdout) {
+        const stdoutStr = String(commitResult.stdout).trim();
+        commitHash = stdoutStr ? stdoutStr.substring(0, 7) : 'unknown';
+      }
+    }
+    
+    // Count uncommitted changes
+    let uncommittedCount = 0;
+    if (changesResult && changesResult.success && changesResult.stdout) {
+      const stdoutStr = typeof changesResult.stdout === 'string' ? changesResult.stdout : String(changesResult.stdout);
+      const changes = stdoutStr.split('\n').filter(line => line.trim() !== '');
+      uncommittedCount = changes.length;
     }
     
     console.log('📊 Repository Status:');
     console.log('====================');
     console.log(`Current branch: ${branchName}`);
     console.log(`Latest commit: ${commitHash}`);
-    
-    // Count uncommitted changes
-    let uncommittedCount = 0;
-    if (changesResult.success && changesResult.stdout) {
-      const changes = changesResult.stdout.split('\n').filter(line => line.trim() !== '');
-      uncommittedCount = changes.length;
-    }
     console.log(`Uncommitted changes: ${uncommittedCount}`);
     
     console.log('\n📝 Detailed status:');
-    console.log(statusResult.stdout);
+    if (statusResult && statusResult.success && statusResult.stdout) {
+      const statusStr = typeof statusResult.stdout === 'string' ? statusResult.stdout : String(statusResult.stdout);
+      console.log(statusStr);
+    }
     
     return { 
       success: true, 
       branch: branchName,
       commit: commitHash,
-      status: statusResult.stdout
+      status: statusResult && statusResult.success ? statusResult.stdout : ''
     };
   } catch (error) {
     console.error('❌ Error showing status:', error.message);
