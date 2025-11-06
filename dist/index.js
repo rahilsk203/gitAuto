@@ -139,15 +139,17 @@ function checkAndInstallRequirements() {
       if (ghPath) {
         console.log(`✅ GitHub CLI found at ${ghPath}`);
         console.log('🔧 Adding GitHub CLI to PATH for this session...');
-        // Add to PATH for this session
+        // Add to PATH for this session (append rather than prepend)
         const currentPath = process.env.PATH;
         const ghDir = path.dirname(ghPath);
-        process.env.PATH = `${ghDir};${currentPath}`;
+        process.env.PATH = `${currentPath};${ghDir}`;
         
         // Verify it works now
         if (commandExists('gh')) {
-          console.log('✅ GitHub CLI is now available');
+          console.log('✅ GitHub CLI is now available in PATH');
           return true;
+        } else {
+          console.log('⚠️  GitHub CLI found but not accessible. You may need to restart your terminal.');
         }
       }
     }
@@ -192,14 +194,14 @@ async function initialize() {
     const auth = require('./lib/auth');
     
     // Login using GitHub CLI
-    const credentials = await auth.login();
+    const credentials = await auth.loginAdvanced();
     if (!credentials.token) {
       console.error('❌ Authentication failed. Exiting...');
       process.exit(1);
     }
     
     // Start the main menu
-    await menu.showMainMenu();
+    await menu.showMainMenuAdvanced();
   } catch (error) {
     console.error('❌ An unexpected error occurred:', error.message);
     process.exit(1);
