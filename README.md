@@ -46,6 +46,7 @@ gitAuto is a powerful Node.js CLI tool that simplifies GitHub repository managem
 - **Analytics Dashboard**: View repository statistics and metrics
 - **Performance Monitoring**: Track execution times and optimize workflows
 - **Enhanced Error Handling**: 100+ specific error scenarios with detailed guidance
+- **Automatic Conflict Resolution**: Automatically resolve non-fast-forward push rejections
 
 ## Why gitAuto?
 
@@ -261,10 +262,12 @@ gitAuto now includes comprehensive error handling for over 100 specific error sc
 - Merge conflicts during commit
 - File mode changes only
 - Corrupted object database
+- GPG signing issues
+- Bad object references
 
-### Git Push Errors (10+ scenarios)
+### Git Push Errors (25+ scenarios)
 - Permission denied
-- Updates rejected
+- Updates rejected (non-fast-forward)
 - No upstream branch
 - Network connectivity issues
 - Repository not found
@@ -273,6 +276,21 @@ gitAuto now includes comprehensive error handling for over 100 specific error sc
 - SSH key issues
 - Large file push rejections
 - Timeout issues
+- Remote ref not found
+- Remote end hung up
+- RPC failed
+- Broken pipe
+- Pack objects died
+- Email privacy restrictions
+- Rebase in progress
+- Shallow update issues
+- Unqualified destination
+- Remote unpack failed
+- Early EOF
+- Object file empty
+- History rewrite issues
+- Failed to push after amend/reset/rebase
+- Src refspec does not match any
 
 ### Git Pull Errors (10+ scenarios)
 - Merge conflicts
@@ -284,12 +302,47 @@ gitAuto now includes comprehensive error handling for over 100 specific error sc
 - Unrelated histories
 - Local changes conflicts
 - Remote repository issues
+- Invalid path (Windows path issues)
+- Fetch into current branch
 
 For each error scenario, gitAuto provides:
 - Detailed error analysis
 - Context-specific suggestions
 - Step-by-step resolution guides
 - Interactive prompts for continuation decisions
+
+### Automatic Conflict Resolution
+
+gitAuto now includes automatic conflict resolution for non-fast-forward push rejections:
+
+When you encounter a non-fast-forward push rejection, gitAuto will:
+1. Automatically detect the conflict
+2. Prompt you to automatically resolve by pulling changes first
+3. Pull the latest changes from the remote repository
+4. Attempt to push again after resolving the conflict
+5. If still unsuccessful, offer a safe force push option (`--force-with-lease`)
+
+This feature eliminates the need to manually run `git pull` and then `git push`, streamlining your workflow and reducing the chance of errors.
+
+## Modular Architecture
+
+gitAuto has been refactored into a modular architecture for better maintainability:
+
+```
+lib/
+├── git.js                    # Main git module exporting all operations
+├── git-operations/          # Individual git operation modules
+│   ├── add-commit.js        # Add and commit operations
+│   ├── batch.js             # Batch processing operations
+│   ├── branch.js            # Branch management operations
+│   ├── clone-repo.js        # Clone and repository operations
+│   ├── pull.js              # Pull operations with error handling
+│   ├── push.js              # Push operations with error handling
+│   ├── status-history.js    # Status and history operations
+├── auth.js                  # Authentication handling
+├── core.js                  # Core utilities and command execution
+├── menu.js                  # Interactive menu system
+```
 
 ## Commands Reference
 
