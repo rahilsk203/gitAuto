@@ -17,13 +17,15 @@ gitauto
 
 ## 📋 Table of Contents
 - [Overview](#overview)
-- [Key Features](#key-features)
+- [Features](#features)
 - [Why gitAuto?](#why-gitauto)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Getting Started](#getting-started)
 - [Usage Guide](#usage-guide)
 - [Smart Features](#smart-features)
+- [Performance Optimizations](#performance-optimizations)
+- [Intelligent Error Handling](#intelligent-error-handling)
 - [Commands Reference](#commands-reference)
 - [Development](#development)
 - [Troubleshooting](#troubleshooting)
@@ -34,32 +36,16 @@ gitauto
 
 gitAuto is a powerful Node.js CLI tool that simplifies GitHub repository management by automating common Git and GitHub operations. Whether you're creating new repositories, managing branches, or syncing changes, gitAuto streamlines the entire workflow directly from your terminal.
 
-## Key Features
+## Features
 
-✨ **Automation**
-- One-command repository creation and cloning
-- Automated Git configuration (username & email)
-- Smart commit and push workflows
-
-🔄 **Synchronization**
-- Seamless push/pull operations
-- Branch management (create, switch, list)
-- Repository visibility control (public/private)
-
-🛠️ **Management**
-- Repository creation and deletion
-- Status and history viewing
-- Cross-platform compatibility
-
-🔒 **Authentication**
-- Automatic GitHub CLI integration
-- Browser-based authentication
-- No manual token handling
-
-📊 **Intelligence**
-- Repository analytics dashboard
-- Smart suggestions based on repo state
-- Context-aware recommendations
+- **Repository Management**: Create, clone, and delete repositories
+- **Automated Git Operations**: Push, pull, and sync with a single command
+- **Smart Suggestions**: Get intelligent recommendations based on your repository state
+- **Performance Optimizations**: DSA-level optimizations for faster execution
+- **Batch Operations**: Process multiple repositories simultaneously
+- **Analytics Dashboard**: View repository statistics and metrics
+- **Performance Monitoring**: Track execution times and optimize workflows
+- **Enhanced Error Handling**: 100+ specific error scenarios with detailed guidance
 
 ## Why gitAuto?
 
@@ -198,11 +184,112 @@ Context-aware recommendations based on repository state:
 - **Ahead of Remote**: "Your branch is X commit(s) ahead of remote. Consider pushing your changes."
 - **Behind Remote**: "Your branch is X commit(s) behind remote. Consider pulling the latest changes."
 
-### ⚡ Performance Optimizations
+## Performance Optimizations
 
-- **Caching**: Intelligent caching for faster operations
-- **Parallel Operations**: Execute multiple Git commands simultaneously when possible
-- **Lightweight**: Minimal dependencies and fast startup
+gitAuto implements several DSA-level optimizations to ensure maximum performance:
+
+### ⚡ Caching Strategies
+- **Analytics Caching**: Repository analytics are cached for 30 seconds to avoid repeated expensive Git operations
+- **Suggestions Caching**: Smart suggestions are cached for 10 seconds for faster response times
+- **API Response Caching**: GitHub API responses are cached with intelligent expiration
+
+### 🚀 Parallel Execution
+- **Concurrent Git Operations**: Multiple Git commands are executed in parallel when possible
+- **Batch Command Processing**: Related commands are combined to reduce subprocess overhead
+- **Multi-Repository Operations**: Perform the same operation across multiple repositories simultaneously
+
+### 📈 Performance Monitoring
+- **Execution Time Tracking**: All operations are monitored for performance metrics
+- **Performance Dashboard**: View detailed performance statistics for all operations
+- **Resource Optimization**: Continuous optimization based on performance data
+
+### 🧠 Intelligent Algorithms
+- **Efficient Data Structures**: Uses Maps for O(1) cache lookups
+- **Lazy Loading**: Data is only fetched when needed
+- **Memory Management**: Automatic cache cleanup to prevent memory leaks
+
+## Intelligent Error Handling
+
+gitAuto provides enhanced error handling with user-friendly guidance:
+
+### 🎯 Context-Aware Error Messages
+- Clear, descriptive error messages instead of cryptic failures
+- Specific guidance based on the type of error encountered
+- Detailed information to help with troubleshooting
+
+### 💡 Smart Suggestions
+- **Add Failures**: Guidance on checking file status and .gitignore configuration
+- **Commit Failures**: Suggestions for staging changes and valid commit messages
+- **Push Failures**: Help with permissions, network issues, and authentication
+- **Pull Failures**: Conflict resolution steps and repository access troubleshooting
+- **General Issues**: Internet connectivity checks and GitHub status monitoring
+
+### 🤝 Interactive User Prompts
+- When operations fail, users are prompted to continue or cancel
+- Decision points allow users to choose their preferred course of action
+- Guidance is provided at each step to help resolve issues
+
+### 🔧 Detailed Troubleshooting
+- Specific error details when available (stderr output)
+- Step-by-step resolution instructions
+- External resource links (GitHub status page)
+
+## Enhanced Error Handling
+
+gitAuto now includes comprehensive error handling for over 100 specific error scenarios with detailed user guidance:
+
+### Git Add Errors (10+ scenarios)
+- Not a Git repository
+- Permission denied
+- Git index lock issues
+- Pathspec mismatches
+- Large file size issues
+- Invalid path characters
+- Hook execution failures
+- Disk space issues
+- Corrupted index
+- Encoding issues
+
+### Git Commit Errors (10+ scenarios)
+- Nothing to commit
+- Empty commit message
+- Git user identity not set
+- Reference locking issues
+- Invalid commit message format
+- Hook execution failures
+- Large diff sizes
+- Merge conflicts during commit
+- File mode changes only
+- Corrupted object database
+
+### Git Push Errors (10+ scenarios)
+- Permission denied
+- Updates rejected
+- No upstream branch
+- Network connectivity issues
+- Repository not found
+- Authentication failures
+- Protected branch rules
+- SSH key issues
+- Large file push rejections
+- Timeout issues
+
+### Git Pull Errors (10+ scenarios)
+- Merge conflicts
+- Permission errors
+- Repository not found
+- Network issues
+- Authentication issues
+- Branch configuration issues
+- Unrelated histories
+- Local changes conflicts
+- Remote repository issues
+
+For each error scenario, gitAuto provides:
+- Detailed error analysis
+- Context-specific suggestions
+- Step-by-step resolution guides
+- Interactive prompts for continuation decisions
 
 ## Commands Reference
 
@@ -212,6 +299,8 @@ Context-aware recommendations based on repository state:
 |---------|-------------|
 | `1️⃣ Create Repository` | Create a new GitHub repository and clone it locally |
 | `2️⃣ Analytics Dashboard` | View repository analytics |
+| `3️⃣ Batch Repository Operations` | Perform operations on multiple repositories |
+| `4️⃣ Performance Monitoring` | View performance metrics and statistics |
 | `5️⃣ Clone Public Repository` | Clone any public GitHub repository |
 | `9️⃣ Clear Caches` | Clear all caches |
 | `6️⃣ Exit` | Exit the application |
@@ -221,6 +310,8 @@ Context-aware recommendations based on repository state:
 | Command | Description |
 |---------|-------------|
 | `1️⃣ Analytics Dashboard` | View repository analytics |
+| `2️⃣ Batch Repository Operations` | Perform operations on multiple repositories |
+| `3️⃣ Performance Monitoring` | View performance metrics and statistics |
 | `4️⃣ Push to Repository` | Add, commit, and push changes to the remote repository |
 | `7️⃣ Pull Latest Changes` | Pull the latest changes from the remote repository |
 | `8️⃣ Branch Management` | Create, list, and switch branches |

@@ -13,7 +13,12 @@
   "scripts": {
     "start": "node index.js",
     "build": "node scripts/build.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx mocha test/*.test.js",
+    "test:core": "npx mocha test/core.test.js",
+    "test:optimizations": "node test/optimizations.test.js",
+    "test:caching": "node test/caching.test.js",
+    "test:batch": "node test/batch.test.js",
+    "test:integration": "node test/integration.test.js"
   },
   "keywords": [
     "git",
@@ -26,6 +31,11 @@
   "dependencies": {
     "axios": "^1.6.0",
     "inquirer": "^8.2.0"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0",
+    "chai": "^4.3.7",
+    "sinon": "^15.0.1"
   },
   "engines": {
     "node": ">=12.0.0"
