@@ -21,11 +21,15 @@ gitauto
 - [Why gitAuto?](#why-gitauto)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
+- [Automatic Dependency Installation](#automatic-dependency-installation)
 - [Getting Started](#getting-started)
 - [Usage Guide](#usage-guide)
 - [Smart Features](#smart-features)
 - [Performance Optimizations](#performance-optimizations)
 - [Intelligent Error Handling](#intelligent-error-handling)
+- [Enhanced Error Handling](#enhanced-error-handling)
+- [Automatic Conflict Resolution](#automatic-conflict-resolution)
+- [Modular Architecture](#modular-architecture)
 - [Commands Reference](#commands-reference)
 - [Development](#development)
 - [Troubleshooting](#troubleshooting)
@@ -47,6 +51,8 @@ gitAuto is a powerful Node.js CLI tool that simplifies GitHub repository managem
 - **Performance Monitoring**: Track execution times and optimize workflows
 - **Enhanced Error Handling**: 100+ specific error scenarios with detailed guidance
 - **Automatic Conflict Resolution**: Automatically resolve non-fast-forward push rejections
+- **Cross-Platform Dependency Management**: Automatic installation of required tools on all systems
+- **Termux Support**: Full support for Android Termux environment
 
 ## Why gitAuto?
 
@@ -67,9 +73,9 @@ gitAuto eliminates these pain points by:
 ## Prerequisites
 
 - **Node.js** v12 or higher
-- **Git** (any recent version)
-- **GitHub Account** (free or paid)
 - **Internet Connection** for GitHub API access
+
+> Note: Git and GitHub CLI will be automatically installed if missing
 
 ## Installation
 
@@ -96,6 +102,61 @@ npm install
 # Run directly
 node index.js
 ```
+
+## Automatic Dependency Installation
+
+gitAuto now includes intelligent automatic dependency installation that works across all platforms:
+
+### What Gets Installed Automatically
+
+1. **Git** - Version control system
+2. **GitHub CLI** - GitHub command-line interface
+3. **Node.js packages** - All required npm dependencies (axios, inquirer)
+
+### Platform Support
+
+- **Windows** - Supports winget, Chocolatey, and direct download
+- **macOS** - Supports Homebrew and direct download
+- **Linux** - Supports APT, YUM, Pacman, and direct download
+- **Termux** - Supports pkg package manager for Android
+
+### How It Works
+
+When you run `gitauto`, the tool automatically:
+1. Checks for required dependencies
+2. Installs any missing tools using the best available package manager
+3. Configures PATH variables when necessary
+4. Installs Node.js packages if missing
+5. Sets up Git user configuration automatically
+
+This ensures gitAuto works out-of-the-box on any system without manual dependency management.
+
+### Termux Support
+
+gitAuto has full support for Termux on Android devices:
+
+1. **Installation in Termux**:
+   ```bash
+   # Install Node.js in Termux
+   pkg install nodejs -y
+   
+   # Install gitAuto
+   npm install -g @rahilsk/gitauto
+   
+   # Run gitAuto
+   gitauto
+   ```
+
+2. **Automatic Dependency Management**:
+   - Git installation via `pkg install git`
+   - GitHub CLI installation via `pkg install gh`
+   - Automatic PATH configuration
+
+3. **Benefits**:
+   - Full Git and GitHub functionality on Android
+   - No root required
+   - Works with all gitAuto features
+   - Same user experience as desktop platforms
 
 ## Getting Started
 
@@ -292,26 +353,13 @@ gitAuto now includes comprehensive error handling for over 100 specific error sc
 - Failed to push after amend/reset/rebase
 - Src refspec does not match any
 
-### Git Pull Errors (10+ scenarios)
-- Merge conflicts
-- Permission errors
-- Repository not found
-- Network issues
-- Authentication issues
-- Branch configuration issues
-- Unrelated histories
-- Local changes conflicts
-- Remote repository issues
-- Invalid path (Windows path issues)
-- Fetch into current branch
-
 For each error scenario, gitAuto provides:
 - Detailed error analysis
 - Context-specific suggestions
 - Step-by-step resolution guides
 - Interactive prompts for continuation decisions
 
-### Automatic Conflict Resolution
+## Automatic Conflict Resolution
 
 gitAuto now includes automatic conflict resolution for non-fast-forward push rejections:
 
@@ -320,7 +368,7 @@ When you encounter a non-fast-forward push rejection, gitAuto will:
 2. Prompt you to automatically resolve by pulling changes first
 3. Pull the latest changes from the remote repository
 4. Attempt to push again after resolving the conflict
-5. If still unsuccessful, offer a safe force push option (`--force-with-lease`)
+5. If still unsuccessful, offer a safe force push option (`--force-with-lease`) with your permission
 
 This feature eliminates the need to manually run `git pull` and then `git push`, streamlining your workflow and reducing the chance of errors.
 
@@ -405,16 +453,28 @@ gitAuto/
 ├── index.js          # Main entry point
 ├── package.json      # Project metadata and dependencies
 ├── README.md         # Documentation
+├── CHANGELOG.md      # Version history
+├── FEATURES.md       # Detailed feature documentation
 ├── LICENSE           # MIT License
 ├── .gitignore        # Git ignore rules
 ├── lib/              # Core modules
 │   ├── auth.js       # Authentication logic
-│   ├── git.js        # Git operations
+│   ├── core.js       # Core utilities and performance optimizations
+│   ├── git.js        # Main git operations module
 │   ├── github.js     # GitHub API interactions
 │   ├── menu.js       # Interactive menu system
-│   └── core.js       # Core utilities
-└── scripts/          # Build scripts
-    └── build.js      # Build process
+│   └── git-operations/ # Individual git operation modules
+│       ├── add-commit.js
+│       ├── batch.js
+│       ├── branch.js
+│       ├── clone-repo.js
+│       ├── pull.js
+│       ├── push.js
+│       └── status-history.js
+├── scripts/          # Build and utility scripts
+│   └── build.js      # Build process
+└── test/             # Test files
+    ├── *.test.js     # Unit and integration tests
 ```
 
 ### Contributing
@@ -438,7 +498,7 @@ npm run build
 
 **GitHub CLI Not Found**
 - Solution: gitAuto will automatically install GitHub CLI
-- Supported package managers: winget, Chocolatey (Windows), Homebrew (macOS), APT/YUM (Linux)
+- Supported package managers: winget, Chocolatey (Windows), Homebrew (macOS), APT/YUM (Linux), pkg (Termux)
 
 **Authentication Failures**
 - Solution: Ensure you can access GitHub in your browser

@@ -5,6 +5,45 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2025-11-12
+
+### Added
+- Full Termux support for Android devices
+- Automatic Git installation via pkg in Termux environment
+- Automatic GitHub CLI installation via pkg in Termux environment
+- Enhanced environment detection for Termux-specific package management
+
+### Changed
+- Improved cross-platform compatibility detection
+- Enhanced package manager selection logic
+- Better handling of Android Termux environment variables
+
+### Fixed
+- Issues with dependency installation in Termux environment
+- PATH configuration problems specific to Termux
+- Package manager detection for mobile Linux environments
+
+## [1.5.0] - 2025-11-12
+
+### Added
+- Cross-platform automatic dependency installation for all required tools
+- Automatic Git installation support for Windows (winget, Chocolatey), macOS (Homebrew), and Linux (APT, YUM, Pacman)
+- Automatic GitHub CLI installation support for all platforms
+- Automatic Node.js package installation and management
+- Enhanced first-run experience with complete automated setup
+- Direct download fallback for Git and GitHub CLI when package managers are not available
+
+### Changed
+- Improved initialization process with comprehensive dependency checking
+- Enhanced error handling for installation failures
+- Better PATH management for installed tools on Windows
+- More robust detection of installed tools and packages
+
+### Fixed
+- Issues with missing dependencies preventing first-time usage
+- PATH configuration problems on Windows after tool installation
+- Incomplete dependency installation in various environments
+
 ## [1.4.0] - 2025-11-12
 
 ### Added

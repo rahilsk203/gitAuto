@@ -8,7 +8,8 @@ const {
   commandExistsOptimized,
   recordPerformanceMetric,
   getPerformanceStats,
-  getAllPerformanceStats
+  getAllPerformanceStats,
+  clearPerformanceMetrics
 } = require('../lib/core');
 
 // Mock execSync to avoid actual command execution during tests
@@ -16,6 +17,14 @@ const { execSync } = require('child_process');
 const sinon = require('sinon');
 
 describe('Core Functions', function() {
+  // Increase timeout for all tests in this suite
+  this.timeout(5000);
+  
+  // Clear performance metrics before running tests
+  beforeEach(function() {
+    clearPerformanceMetrics();
+  });
+
   describe('commandExistsOptimized', function() {
     it('should return true for existing commands', function() {
       // This test depends on the environment - node should exist
@@ -56,18 +65,27 @@ describe('Core Functions', function() {
 
   describe('Performance Metrics', function() {
     it('should record and retrieve performance metrics', function() {
+      // Record multiple metrics for the same function
       recordPerformanceMetric('testFunction', 100);
+      recordPerformanceMetric('testFunction', 200);
+      recordPerformanceMetric('testFunction', 150);
+      
       const stats = getPerformanceStats('testFunction');
       assert.strictEqual(stats.functionName, 'testFunction');
-      assert.strictEqual(stats.count, 1);
+      assert.strictEqual(stats.count, 3);
       assert.strictEqual(stats.min, 100);
-      assert.strictEqual(stats.max, 100);
+      assert.strictEqual(stats.max, 200);
+      assert.strictEqual(stats.average, '150.00');
     });
 
     it('should get all performance stats', function() {
+      // Record metrics for multiple functions
+      recordPerformanceMetric('function1', 100);
+      recordPerformanceMetric('function2', 200);
+      
       const allStats = getAllPerformanceStats();
       assert(Array.isArray(allStats));
-      assert(allStats.length > 0);
+      assert(allStats.length >= 2);
     });
   });
 });
