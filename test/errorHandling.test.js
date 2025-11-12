@@ -111,8 +111,8 @@ const originalExecuteCommandAdvanced = core.executeCommandAdvanced;
     
     const commitErrorResult = await pushRepoAdvanced('test commit');
     
-    // Should handle the specific error
-    assert.strictEqual(commitErrorResult.success, true); // No changes is not an error
+    // Should handle the specific error (no changes is not an error, it's a success case)
+    assert.strictEqual(commitErrorResult.success, true);
     console.log('   ✅ Commit error handling works correctly\n');
     
     // Test 6: Test push error scenarios
@@ -159,6 +159,7 @@ const originalExecuteCommandAdvanced = core.executeCommandAdvanced;
     console.log('7. Testing pull error scenarios...');
     
     // Mock executeCommandAdvanced to simulate git pull error
+    let callCount = 0;
     core.executeCommandAdvanced = async (command) => {
       if (command === 'git pull') {
         return {
