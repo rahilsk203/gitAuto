@@ -1,6 +1,6 @@
 {
   "name": "@rahilsk/gitauto",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "A Node.js CLI tool for automating common GitHub repository management tasks",
   "main": "index.js",
   "bin": {
