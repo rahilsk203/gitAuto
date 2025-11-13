@@ -4,6 +4,7 @@ const { execSync } = require('child_process');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
+const { checkAndConfigureGit } = require('./lib/git-config');
 
 /**
  * gitAuto - A Node.js CLI tool for automating common GitHub repository management tasks
@@ -244,55 +245,9 @@ function installGit() {
 }
 
 // Function to auto-configure git user settings
-const readlineSync = require('readline-sync');
 function autoConfigureGit() {
-  try {
-    // Check if user.name is already set
-    let userNameConfigured = false;
-    try {
-      const name = execSync('git config --global user.name', { encoding: 'utf8' }).trim();
-      if (name) userNameConfigured = true;
-    } catch (error) {}
-
-    // Check if user.email is already set
-    let userEmailConfigured = false;
-    try {
-      const email = execSync('git config --global user.email', { encoding: 'utf8' }).trim();
-      if (email) userEmailConfigured = true;
-    } catch (error) {}
-
-    if (userNameConfigured && userEmailConfigured) {
-      console.log('✅ Git user settings already configured');
-      return true;
-    }
-
-    console.log('❌ Git user settings are not configured.');
-
-    // Ask user to enter details
-    const name = readlineSync.question('Enter your Git username: ').trim();
-    const email = readlineSync.questionEMail('Enter your Git email: ').trim();
-
-    if (!name || !email) {
-      console.log('⚠️ Both username and email are required. Try again.');
-      return false;
-    }
-
-    // Set git config globally
-    execSync(`git config --global user.name "${name}"`);
-    execSync(`git config --global user.email "${email}"`);
-
-    console.log('✅ Git user configuration completed successfully!');
-    console.log(`   Username: ${name}`);
-    console.log(`   Email: ${email}`);
-    return true;
-  } catch (error) {
-    console.error('❌ Error configuring Git user settings:', error.message);
-    return false;
-  }
+  return checkAndConfigureGit();
 }
-
-// Example usage
-autoConfigureGit();
 
 // Check and install required tools
 function checkAndInstallRequirements() {
