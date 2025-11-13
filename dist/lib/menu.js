@@ -193,7 +193,7 @@ async function showNonRepoMenuAdvanced() {
         { name: '3️⃣ Batch Repository Operations', value: 'batch' },
         { name: '4️⃣ Performance Monitoring', value: 'performance' },
         { name: '5️⃣ Clone Public Repository', value: 'clone_public' },
-        { name: '9️⃣ Clear Caches', value: 'clear_cache' },
+        { name: '🔟 Clear Caches', value: 'clear_cache' },
         { name: '6️⃣ Exit', value: 'exit' }
       ]
     }
@@ -245,7 +245,7 @@ async function showRepoMenuAdvanced() {
         { name: '8️⃣ Branch Management', value: 'branch' },
         { name: '9️⃣ Show Status', value: 'status' },
         { name: '0️⃣ Show Commit History', value: 'history' },
-        { name: '9️⃣ Clear Caches', value: 'clear_cache' },
+        { name: '🔟 Clear Caches', value: 'clear_cache' },
         { name: '6️⃣ Exit', value: 'exit' }
       ]
     }
