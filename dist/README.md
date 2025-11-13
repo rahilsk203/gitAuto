@@ -15,6 +15,17 @@ npm install -g @rahilsk/gitauto
 gitauto
 ```
 
+## 🔧 Automatic Git Configuration
+
+gitAuto now automatically checks and configures your Git settings before running any commands. If your Git username or email isn't configured, it will prompt you to enter them:
+
+```bash
+? Enter your Git username: your-username
+? Enter your Git email: your-email@example.com
+```
+
+This works across all platforms including Windows, macOS, Linux, and Termux (Android).
+
 ## What is gitAuto?
 
 If you've ever felt overwhelmed by Git commands or found yourself repeating the same GitHub tasks over and over, gitAuto is for you. It's a simple command-line tool that takes care of the tedious parts of working with Git and GitHub.
@@ -57,11 +68,14 @@ Here's what you can do with gitAuto:
 - **Analytics Dashboard**: See commit counts, branch info, and contributor stats
 - **Smart Suggestions**: Get helpful tips like "You have uncommitted changes" or "Your branch is behind remote"
 - **Automatic Conflict Resolution**: Handles those annoying "non-fast-forward" errors automatically
+- **Smart Error Resolver**: Automatically detects and fixes common Git issues
+- **Automatic Git Configuration**: Checks and configures your Git username and email automatically
 
 ### Advanced Features
 - Work with multiple repositories at once
 - Monitor performance and execution times
 - Handle over 100 different error scenarios gracefully
+- DSA-level optimizations for faster performance
 
 ## 🛠️ Installation
 
@@ -96,7 +110,7 @@ node index.js
 When you first run `gitauto`, it will:
 
 1. Check if you have Git and GitHub CLI installed (installs them if missing)
-2. Set up your Git username and email automatically
+2. Check and configure your Git username and email (prompts you if missing)
 3. Log you into GitHub through your browser
 4. Show you a menu of options
 
@@ -115,6 +129,29 @@ The tool will automatically show you different options depending on whether you'
 **In a Git repository**: You'll see options for pushing, pulling, viewing status, etc.
 
 **Outside a Git repository**: You'll see options for creating or cloning repositories.
+
+## 🧠 Smart Error Resolver
+
+gitAuto now includes an intelligent error resolver that automatically detects and fixes common Git issues:
+
+### What it can fix:
+- Git index lock issues
+- Repository initialization problems
+- Permission errors
+- Large file handling
+- Corrupted Git index
+- Merge conflicts
+- Branch configuration issues
+- Authentication problems
+- Network connectivity issues
+- Git configuration errors
+- Remote repository issues
+- Disk space problems
+
+### How it works:
+When gitAuto encounters an error during any Git operation, it automatically analyzes the error message and attempts to resolve it. If a fix is available, it applies the fix and retries the operation. If not, it falls back to detailed error explanations and suggestions.
+
+This feature makes gitAuto much more resilient and user-friendly, especially for beginners who might encounter common Git issues.
 
 ## 📱 Android Support (Termux)
 
@@ -165,8 +202,8 @@ cd gitAuto
 # Install dependencies
 npm install
 
-# Run in development mode
-npm start
+# Run it
+node index.js
 ```
 
 ### Project Structure

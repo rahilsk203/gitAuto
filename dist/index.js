@@ -4,6 +4,7 @@ const { execSync } = require('child_process');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
+const { checkAndConfigureGit } = require('./lib/git-config');
 
 /**
  * gitAuto - A Node.js CLI tool for automating common GitHub repository management tasks
@@ -136,7 +137,7 @@ function installGitHubCLI() {
         console.log('✅ GitHub CLI installed manually');
         return true;
       }
-    } else if (platform === 'linux') {
+    } else if (platform === 'linux' || platform === 'android') {
       // Check for Termux first
       if (isTermux) {
         // Termux - use pkg
@@ -245,35 +246,7 @@ function installGit() {
 
 // Function to auto-configure git user settings
 function autoConfigureGit() {
-  try {
-    // Only configure if not already set
-    try {
-      execSync('git config --global user.name', { stdio: 'ignore' });
-      execSync('git config --global user.email', { stdio: 'ignore' });
-      console.log('✅ Git user settings already configured');
-      return true;
-    } catch {
-      // Settings not configured, proceed with auto-configuration
-    }
-    
-    console.log('🔧 Auto-configuring Git user settings...');
-    
-    // Get system username
-    const systemUsername = os.userInfo().username;
-    
-    // Set git user name
-    execSync(`git config --global user.name "${systemUsername}"`, { stdio: 'ignore' });
-    
-    // Set git user email
-    const email = `${systemUsername}@users.noreply.github.com`;
-    execSync(`git config --global user.email "${email}"`, { stdio: 'ignore' });
-    
-    console.log(`✅ Git user settings configured: ${systemUsername} <${email}>`);
-    return true;
-  } catch (error) {
-    console.error('❌ Error configuring Git user settings:', error.message);
-    return false;
-  }
+  return checkAndConfigureGit();
 }
 
 // Check and install required tools
@@ -379,7 +352,9 @@ async function initialize() {
   }
   
   // Auto-configure git settings
-  autoConfigureGit();
+  if (!autoConfigureGit()) {
+    process.exit(1);
+  }
   
   try {
     // Import modules after checking requirements
