@@ -136,7 +136,7 @@ function installGitHubCLI() {
         console.log('✅ GitHub CLI installed manually');
         return true;
       }
-    } else if (platform === 'linux') {
+    } else if (platform === 'linux' || platform === 'android') {
       // Check for Termux first
       if (isTermux) {
         // Termux - use pkg
@@ -244,37 +244,55 @@ function installGit() {
 }
 
 // Function to auto-configure git user settings
+const readlineSync = require('readline-sync');
 function autoConfigureGit() {
   try {
-    // Only configure if not already set
+    // Check if user.name is already set
+    let userNameConfigured = false;
     try {
-      execSync('git config --global user.name', { stdio: 'ignore' });
-      execSync('git config --global user.email', { stdio: 'ignore' });
+      const name = execSync('git config --global user.name', { encoding: 'utf8' }).trim();
+      if (name) userNameConfigured = true;
+    } catch (error) {}
+
+    // Check if user.email is already set
+    let userEmailConfigured = false;
+    try {
+      const email = execSync('git config --global user.email', { encoding: 'utf8' }).trim();
+      if (email) userEmailConfigured = true;
+    } catch (error) {}
+
+    if (userNameConfigured && userEmailConfigured) {
       console.log('✅ Git user settings already configured');
       return true;
-    } catch {
-      // Settings not configured, proceed with auto-configuration
     }
-    
-    console.log('🔧 Auto-configuring Git user settings...');
-    
-    // Get system username
-    const systemUsername = os.userInfo().username;
-    
-    // Set git user name
-    execSync(`git config --global user.name "${systemUsername}"`, { stdio: 'ignore' });
-    
-    // Set git user email
-    const email = `${systemUsername}@users.noreply.github.com`;
-    execSync(`git config --global user.email "${email}"`, { stdio: 'ignore' });
-    
-    console.log(`✅ Git user settings configured: ${systemUsername} <${email}>`);
+
+    console.log('❌ Git user settings are not configured.');
+
+    // Ask user to enter details
+    const name = readlineSync.question('Enter your Git username: ').trim();
+    const email = readlineSync.questionEMail('Enter your Git email: ').trim();
+
+    if (!name || !email) {
+      console.log('⚠️ Both username and email are required. Try again.');
+      return false;
+    }
+
+    // Set git config globally
+    execSync(`git config --global user.name "${name}"`);
+    execSync(`git config --global user.email "${email}"`);
+
+    console.log('✅ Git user configuration completed successfully!');
+    console.log(`   Username: ${name}`);
+    console.log(`   Email: ${email}`);
     return true;
   } catch (error) {
     console.error('❌ Error configuring Git user settings:', error.message);
     return false;
   }
 }
+
+// Example usage
+autoConfigureGit();
 
 // Check and install required tools
 function checkAndInstallRequirements() {
@@ -379,7 +397,9 @@ async function initialize() {
   }
   
   // Auto-configure git settings
-  autoConfigureGit();
+  if (!autoConfigureGit()) {
+    process.exit(1);
+  }
   
   try {
     // Import modules after checking requirements

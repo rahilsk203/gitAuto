@@ -9,7 +9,8 @@ const {
   recordPerformanceMetric,
   getPerformanceStats,
   getAllPerformanceStats,
-  clearPerformanceMetrics
+  clearPerformanceMetrics,
+  slugify
 } = require('../lib/core');
 
 // Mock execSync to avoid actual command execution during tests
@@ -86,6 +87,36 @@ describe('Core Functions', function() {
       const allStats = getAllPerformanceStats();
       assert(Array.isArray(allStats));
       assert(allStats.length >= 2);
+    });
+  });
+
+  describe('slugify', function() {
+    it('should convert a basic string to a slug', function() {
+      assert.strictEqual(slugify('Hello World'), 'hello-world');
+    });
+
+    it('should handle special characters and convert to lowercase', function() {
+      assert.strictEqual(slugify('  My Awesome Title!  '), 'my-awesome-title');
+    });
+
+    it('should replace multiple spaces with a single hyphen', function() {
+      assert.strictEqual(slugify('Another   Test   String'), 'another-test-string');
+    });
+
+    it('should remove leading and trailing spaces', function() {
+      assert.strictEqual(slugify('  Trimmed String  '), 'trimmed-string');
+    });
+
+    it('should handle empty strings', function() {
+      assert.strictEqual(slugify(''), '');
+    });
+
+    it('should handle strings with only special characters', function() {
+      assert.strictEqual(slugify('!@#$%^&*()'), '');
+    });
+
+    it('should handle accented characters', function() {
+      assert.strictEqual(slugify('Crème Brûlée'), 'creme-brulee');
     });
   });
 });
