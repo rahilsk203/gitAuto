@@ -210,7 +210,7 @@ function installGit() {
         console.log('✅ Git installed via Homebrew');
         return true;
       }
-    } else if (platform === 'linux') {
+    } else if (platform === 'linux' || platform === 'android') {
       // Check for Termux first
       if (isTermux) {
         // Termux - use pkg
