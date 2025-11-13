@@ -168,7 +168,7 @@ npm install -g @rahilsk/gitauto
 gitauto
 ```
 
-It will automatically handle installing Git and GitHub CLI through Termux's package manager.
+It will automatically handle installing Git and GitHub CLI through Termux's package manager. Fixed in v1.6.2 to properly detect Termux environments and use the `pkg` package manager for dependency installation.
 
 ## 🤔 Common Questions
 
