@@ -10,24 +10,24 @@ const {
   setRepoVisibility, 
   getAuthCloneUrl 
 } = require('./github');
-const git = require('./git');
-const core = require('./core');
 
-// Create aliases for the git functions
-const executeCommand = git.executeCommandAdvanced;
-const cloneRepo = git.cloneRepoAdvanced;
-const pushRepo = git.pushRepoAdvanced;
-const pullRepo = git.pullRepoAdvanced;
-const createBranch = git.createBranchAdvanced;
-const listBranches = git.listBranchesAdvanced;
-const switchBranch = git.switchBranchAdvanced;
-const showStatus = git.showStatusAdvanced;
-const showCommitHistory = git.showCommitHistoryAdvanced;
-const autoCloneAndExit = git.autoCloneAndExitAdvanced;
-const deleteLocalRepo = git.deleteLocalRepoAdvanced;
-const batchProcessRepos = git.batchProcessRepos;
+// Import modular git operations
+const { 
+  cloneRepoAdvanced,
+  pushRepoAdvanced,
+  pullRepoAdvanced,
+  createBranchAdvanced,
+  listBranchesAdvanced,
+  switchBranchAdvanced,
+  showStatusAdvanced,
+  showCommitHistoryAdvanced,
+  autoCloneAndExitAdvanced,
+  deleteLocalRepoAdvanced,
+  batchProcessRepos
+} = require('./git');
 
 // Create aliases for core functions
+const core = require('./core');
 const executeCommandSync = core.executeCommandSync;
 const executeCommandAdvanced = core.executeCommandAdvanced;
 const getRepoAnalytics = core.getRepoAnalytics;
@@ -271,10 +271,10 @@ async function showRepoMenuAdvanced() {
       await showBranchMenu();
       break;
     case 'status':
-      await showStatus();
+      await showStatusAdvanced();
       break;
     case 'history':
-      await showCommitHistory();
+      await showCommitHistoryAdvanced();
       break;
     case 'clear_cache':
       clearCaches();
@@ -315,10 +315,10 @@ async function showBranchMenu() {
           message: 'Enter new branch name:'
         }
       ]);
-      await createBranch(createAnswers.branchName);
+      await createBranchAdvanced(createAnswers.branchName);
       break;
     case 'list':
-      await listBranches();
+      await listBranchesAdvanced();
       break;
     case 'switch':
       const switchAnswers = await inquirer.prompt([
@@ -328,7 +328,7 @@ async function showBranchMenu() {
           message: 'Enter branch name to switch to:'
         }
       ]);
-      await switchBranch(switchAnswers.branchName);
+      await switchBranchAdvanced(switchAnswers.branchName);
       break;
     case 'back':
       return;
@@ -358,7 +358,7 @@ async function handleCreateRepo() {
     // Auto-clone the newly created repository
     try {
       const repoUrl = getAuthCloneUrl(answers.repoName);
-      autoCloneAndExit(answers.repoName, repoUrl);
+      autoCloneAndExitAdvanced(answers.repoName, repoUrl);
     } catch (error) {
       console.error('❌ Auto-clone failed after repository creation');
     }
@@ -384,7 +384,7 @@ async function handleClonePublicRepo() {
   
   try {
     const repoName = answers.repoUrl.split('/').pop().replace('.git', '');
-    await cloneRepo(answers.repoUrl, repoName);
+    await cloneRepoAdvanced(answers.repoUrl, repoName);
     
     const repoPath = path.join(process.cwd(), repoName);
     if (fs.existsSync(repoPath)) {
@@ -439,7 +439,7 @@ async function handlePushRepo() {
     ]);
     
     if (answers.confirm) {
-      await pushRepo(answers.message);
+      await pushRepoAdvanced(answers.message);
     } else {
       console.log('❌ Push cancelled');
     }
@@ -452,7 +452,7 @@ async function handlePushRepo() {
  * Handle pulling from repository
  */
 async function handlePullRepo() {
-  await pullRepo();
+  await pullRepoAdvanced();
 }
 
 /**

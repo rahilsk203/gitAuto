@@ -16,8 +16,6 @@ const filesToCopy = [
   'index.js',
   'package.json',
   'README.md',
-  'CHANGELOG.md',
-  'FEATURES.md',
   'LICENSE',
   '.gitignore'
 ];
