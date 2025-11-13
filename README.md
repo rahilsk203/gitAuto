@@ -57,11 +57,13 @@ Here's what you can do with gitAuto:
 - **Analytics Dashboard**: See commit counts, branch info, and contributor stats
 - **Smart Suggestions**: Get helpful tips like "You have uncommitted changes" or "Your branch is behind remote"
 - **Automatic Conflict Resolution**: Handles those annoying "non-fast-forward" errors automatically
+- **Smart Error Resolver**: Automatically detects and fixes common Git issues
 
 ### Advanced Features
 - Work with multiple repositories at once
 - Monitor performance and execution times
 - Handle over 100 different error scenarios gracefully
+- DSA-level optimizations for faster performance
 
 ## 🛠️ Installation
 
@@ -116,6 +118,29 @@ The tool will automatically show you different options depending on whether you'
 
 **Outside a Git repository**: You'll see options for creating or cloning repositories.
 
+## 🧠 Smart Error Resolver
+
+gitAuto now includes an intelligent error resolver that automatically detects and fixes common Git issues:
+
+### What it can fix:
+- Git index lock issues
+- Repository initialization problems
+- Permission errors
+- Large file handling
+- Corrupted Git index
+- Merge conflicts
+- Branch configuration issues
+- Authentication problems
+- Network connectivity issues
+- Git configuration errors
+- Remote repository issues
+- Disk space problems
+
+### How it works:
+When gitAuto encounters an error during any Git operation, it automatically analyzes the error message and attempts to resolve it. If a fix is available, it applies the fix and retries the operation. If not, it falls back to detailed error explanations and suggestions.
+
+This feature makes gitAuto much more resilient and user-friendly, especially for beginners who might encounter common Git issues.
+
 ## 📱 Android Support (Termux)
 
 Yes, gitAuto works on Android! Install it in Termux:
@@ -165,8 +190,8 @@ cd gitAuto
 # Install dependencies
 npm install
 
-# Run in development mode
-npm start
+# Run it
+node index.js
 ```
 
 ### Project Structure
